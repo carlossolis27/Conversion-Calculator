@@ -1,20 +1,22 @@
 <?php
-if (isset($_GET['action'])) {
-    $action = $_GET['action'];
-} else {
-    $action = 'metrosAPies'; // La acción predeterminada
+
+require_once 'Models/ModeloConversorMonedas.php';
+require_once 'Views/VistaConversorMonedas.php';
+require_once 'Controllers/ControladorConversorMonedas.php';
+
+$modelo = new ModeloConversorMonedas();
+$vista = new VistaConversorMonedas();
+$controlador = new ControladorConversorMonedas($modelo, $vista);
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $cantidad = $_POST['cantidad'];
+    $monedaOrigen = $_POST['moneda_origen'];
+    $monedaDestino = $_POST['moneda_destino'];
+
+    $controlador->convertirMoneda($cantidad, $monedaOrigen, $monedaDestino);
 }
 
-require_once('Controllers/LongitudController.php');
-$controller = new ConversionController();
+$vista->mostrarInterfaz();
 
-if ($action === 'metrosAPies') {
-    if (isset($_GET['metros'])) {
-        $metros = $_GET['metros'];
-        $controller->metrosAPies($metros);
-    } else {
-        // Mostrar un formulario para ingresar los metros
-        include('views/conversion_form.php');
-    }
-}
+
 ?>
